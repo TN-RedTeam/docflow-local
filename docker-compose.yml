@@ -1,0 +1,73 @@
+# DocFlow Local — orchestration complète.
+#
+#   docker compose up -d --build                    (Ollama installé sur la machine hôte)
+#   docker compose --profile ollama up -d --build   (Ollama dans un conteneur, cf. README)
+#
+# Aucun service ne communique avec l'extérieur : les documents restent sur la machine.
+
+name: docflow-local
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-docflow}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-docflow}
+      POSTGRES_DB: ${POSTGRES_DB:-docflow}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./backend/db/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-docflow}:${POSTGRES_PASSWORD:-docflow}@db:5432/${POSTGRES_DB:-docflow}
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-qwen2.5:7b}
+      OLLAMA_TIMEOUT_SECONDS: ${OLLAMA_TIMEOUT_SECONDS:-300}
+      OCR_LANGUAGES: ${OCR_LANGUAGES:-fra+eng}
+      OCR_DPI: ${OCR_DPI:-300}
+      MAX_UPLOAD_MB: ${MAX_UPLOAD_MB:-25}
+      MAX_BATCH_FILES: ${MAX_BATCH_FILES:-50}
+      EXPORT_DIR: /data/exports
+      CORS_ORIGINS: http://localhost:${FRONTEND_PORT:-8080}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - exports:/data/exports
+    ports:
+      - "127.0.0.1:${BACKEND_PORT:-8000}:8000"
+
+  frontend:
+    build: ./frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "${FRONTEND_PORT:-8080}:80"
+
+  # Optionnel : Ollama en conteneur (profil « ollama »).
+  # Avec ce profil, définir OLLAMA_BASE_URL=http://ollama:11434 dans .env.
+  ollama:
+    image: ollama/ollama:latest
+    profiles: ["ollama"]
+    restart: unless-stopped
+    volumes:
+      - ollama:/root/.ollama
+    ports:
+      - "127.0.0.1:11434:11434"
+
+volumes:
+  pgdata:
+  exports:
+  ollama:
