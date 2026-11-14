@@ -1,0 +1,100 @@
+{
+  "code": "facture_fournisseur",
+  "label": "Facture Fournisseur",
+  "description": "Facture d'achat émise par un fournisseur : identité de l'émetteur, lignes d'articles, totaux HT / TVA / TTC.",
+  "version": 1,
+  "document_hint": "Le document est une facture fournisseur française. L'émetteur est le fournisseur qui émet la facture (jamais le client facturé). Recopie les montants exactement tels qu'ils sont imprimés, même s'ils te semblent faux.",
+  "fields": [
+    { "name": "numero_facture", "label": "Numéro de facture", "type": "string", "required": true },
+    { "name": "date_facture", "label": "Date de facture", "type": "date", "required": true },
+    { "name": "date_echeance", "label": "Date d'échéance", "type": "date" },
+    { "name": "numero_commande", "label": "Numéro de commande", "type": "string", "description": "Référence du bon de commande client, si elle est indiquée" },
+    {
+      "name": "emetteur",
+      "label": "Émetteur (fournisseur)",
+      "type": "object",
+      "required": true,
+      "fields": [
+        { "name": "nom", "label": "Raison sociale", "type": "string", "required": true },
+        { "name": "siret", "label": "SIRET", "type": "string", "format": "siret", "required": true, "description": "14 chiffres, sans espaces" },
+        { "name": "tva_intracom", "label": "N° TVA intracommunautaire", "type": "string", "format": "tva_intracom" },
+        { "name": "adresse", "label": "Adresse", "type": "string" },
+        { "name": "code_postal", "label": "Code postal", "type": "string", "format": "code_postal_fr" },
+        { "name": "ville", "label": "Ville", "type": "string" }
+      ]
+    },
+    {
+      "name": "client",
+      "label": "Client facturé",
+      "type": "object",
+      "fields": [
+        { "name": "nom", "label": "Raison sociale", "type": "string" },
+        { "name": "adresse", "label": "Adresse complète", "type": "string" }
+      ]
+    },
+    {
+      "name": "lignes",
+      "label": "Lignes d'articles",
+      "type": "array",
+      "required": true,
+      "min_items": 1,
+      "fields": [
+        { "name": "reference", "label": "Référence", "type": "string" },
+        { "name": "designation", "label": "Désignation", "type": "string", "required": true },
+        { "name": "quantite", "label": "Quantité", "type": "number", "required": true },
+        { "name": "prix_unitaire_ht", "label": "PU HT", "type": "number", "required": true, "unit": "€" },
+        { "name": "remise_pct", "label": "Remise %", "type": "number", "unit": "%", "description": "Pourcentage de remise sur la ligne, null s'il n'y en a pas" },
+        { "name": "montant_ht", "label": "Montant HT", "type": "number", "required": true, "unit": "€" }
+      ]
+    },
+    { "name": "total_ht", "label": "Total HT", "type": "number", "required": true, "unit": "€" },
+    { "name": "taux_tva", "label": "Taux de TVA", "type": "number", "unit": "%", "allowed_values": [0, 2.1, 5.5, 10, 20], "description": "Taux en pourcentage, par exemple 20 pour 20 %. Null si la facture ventile plusieurs taux." },
+    { "name": "montant_tva", "label": "Montant TVA", "type": "number", "required": true, "unit": "€" },
+    { "name": "total_ttc", "label": "Net à payer TTC", "type": "number", "required": true, "unit": "€" },
+    { "name": "iban", "label": "IBAN de règlement", "type": "string", "format": "iban" },
+    { "name": "conditions_paiement", "label": "Conditions de paiement", "type": "text" }
+  ],
+  "validation_rules": [
+    {
+      "type": "product_equals",
+      "code": "calcul_ligne_incoherent",
+      "label": "Montant HT de la ligne ≠ quantité × prix unitaire HT (remise déduite)",
+      "array": "lignes",
+      "factors": ["quantite", "prix_unitaire_ht"],
+      "discount_percent": "remise_pct",
+      "result": "montant_ht",
+      "tolerance": 0.01
+    },
+    {
+      "type": "sum_array_equals",
+      "code": "total_ht_incoherent",
+      "label": "Total HT ≠ somme des montants HT des lignes",
+      "array": "lignes",
+      "item_field": "montant_ht",
+      "total": "total_ht"
+    },
+    {
+      "type": "percentage_equals",
+      "code": "tva_incoherente",
+      "label": "Montant de TVA ≠ total HT × taux de TVA",
+      "base": "total_ht",
+      "rate": "taux_tva",
+      "result": "montant_tva"
+    },
+    {
+      "type": "sum_fields_equals",
+      "code": "ttc_incoherent",
+      "label": "Net TTC ≠ total HT + montant TVA",
+      "terms": ["total_ht", "montant_tva"],
+      "total": "total_ttc"
+    },
+    {
+      "type": "less_or_equal",
+      "code": "dates_incoherentes",
+      "label": "La date d'échéance précède la date de facture",
+      "left": "date_facture",
+      "right": "date_echeance"
+    }
+  ],
+  "export": { "line_array": "lignes" }
+}

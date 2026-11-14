@@ -1,0 +1,123 @@
+{
+  "code": "transport_cmr",
+  "label": "CMR Transport",
+  "description": "Lettre de voiture CMR ou bon de livraison transport : expéditeur, destinataire, colis, poids, réserves.",
+  "version": 1,
+  "document_hint": "Le document est une lettre de voiture CMR ou un bon de livraison de transport routier. L'expéditeur remet la marchandise, le destinataire la reçoit, le transporteur l'achemine. Les réserves sont les remarques écrites à la livraison (colis abîmé, manquant...) : null s'il n'y en a aucune ou si la mention est « sans réserve ».",
+  "fields": [
+    { "name": "numero_cmr", "label": "Numéro de CMR / BL", "type": "string", "required": true },
+    { "name": "date_etablissement", "label": "Date d'établissement", "type": "date", "required": true },
+    { "name": "lieu_etablissement", "label": "Lieu d'établissement", "type": "string" },
+    {
+      "name": "expediteur",
+      "label": "Expéditeur",
+      "type": "object",
+      "required": true,
+      "fields": [
+        { "name": "nom", "label": "Raison sociale", "type": "string", "required": true },
+        { "name": "adresse", "label": "Adresse", "type": "string" },
+        { "name": "code_postal", "label": "Code postal", "type": "string" },
+        { "name": "ville", "label": "Ville", "type": "string" },
+        { "name": "pays", "label": "Pays", "type": "string" }
+      ]
+    },
+    {
+      "name": "destinataire",
+      "label": "Destinataire",
+      "type": "object",
+      "required": true,
+      "fields": [
+        { "name": "nom", "label": "Raison sociale", "type": "string", "required": true },
+        { "name": "adresse", "label": "Adresse", "type": "string" },
+        { "name": "code_postal", "label": "Code postal", "type": "string" },
+        { "name": "ville", "label": "Ville", "type": "string" },
+        { "name": "pays", "label": "Pays", "type": "string" }
+      ]
+    },
+    {
+      "name": "transporteur",
+      "label": "Transporteur",
+      "type": "object",
+      "fields": [
+        { "name": "nom", "label": "Raison sociale", "type": "string" },
+        { "name": "siret", "label": "SIRET", "type": "string", "format": "siret" },
+        { "name": "immatriculation", "label": "Immatriculation véhicule", "type": "string" }
+      ]
+    },
+    { "name": "lieu_chargement", "label": "Lieu de chargement", "type": "string" },
+    { "name": "date_chargement", "label": "Date de chargement", "type": "date" },
+    { "name": "lieu_livraison", "label": "Lieu de livraison", "type": "string", "required": true },
+    { "name": "date_livraison", "label": "Date de livraison", "type": "date" },
+    {
+      "name": "marchandises",
+      "label": "Colis / marchandises",
+      "type": "array",
+      "required": true,
+      "min_items": 1,
+      "fields": [
+        { "name": "reference_colis", "label": "Référence colis", "type": "string", "required": true, "description": "Marques, numéros ou référence du colis / de la palette" },
+        { "name": "nature_marchandise", "label": "Nature de la marchandise", "type": "string" },
+        { "name": "nombre_colis", "label": "Nb colis", "type": "integer" },
+        { "name": "type_emballage", "label": "Emballage", "type": "string" },
+        { "name": "poids_brut_kg", "label": "Poids brut", "type": "number", "required": true, "unit": "kg" },
+        { "name": "poids_net_kg", "label": "Poids net", "type": "number", "unit": "kg" }
+      ]
+    },
+    { "name": "nombre_colis_total", "label": "Nombre total de colis", "type": "integer" },
+    { "name": "poids_brut_total_kg", "label": "Poids brut total", "type": "number", "required": true, "unit": "kg" },
+    { "name": "poids_net_total_kg", "label": "Poids net total", "type": "number", "unit": "kg" },
+    { "name": "reserves", "label": "Réserves du destinataire", "type": "text", "description": "Texte des réserves émises à la livraison ; null en l'absence de réserve" }
+  ],
+  "validation_rules": [
+    {
+      "type": "sum_array_equals",
+      "code": "poids_brut_incoherent",
+      "label": "Poids brut total ≠ somme des poids bruts des colis",
+      "array": "marchandises",
+      "item_field": "poids_brut_kg",
+      "total": "poids_brut_total_kg",
+      "tolerance": 0.5
+    },
+    {
+      "type": "sum_array_equals",
+      "code": "poids_net_incoherent",
+      "label": "Poids net total ≠ somme des poids nets des colis",
+      "array": "marchandises",
+      "item_field": "poids_net_kg",
+      "total": "poids_net_total_kg",
+      "tolerance": 0.5
+    },
+    {
+      "type": "sum_array_equals",
+      "code": "nombre_colis_incoherent",
+      "label": "Nombre total de colis ≠ somme des colis par ligne",
+      "array": "marchandises",
+      "item_field": "nombre_colis",
+      "total": "nombre_colis_total",
+      "tolerance": 0
+    },
+    {
+      "type": "less_or_equal",
+      "code": "poids_net_superieur_brut",
+      "label": "Le poids net dépasse le poids brut",
+      "array": "marchandises",
+      "left": "poids_net_kg",
+      "right": "poids_brut_kg"
+    },
+    {
+      "type": "less_or_equal",
+      "code": "poids_net_superieur_brut",
+      "label": "Le poids net total dépasse le poids brut total",
+      "left": "poids_net_total_kg",
+      "right": "poids_brut_total_kg"
+    },
+    {
+      "type": "less_or_equal",
+      "code": "dates_incoherentes",
+      "label": "La date de livraison précède la date de chargement",
+      "left": "date_chargement",
+      "right": "date_livraison"
+    }
+  ],
+  "export": { "line_array": "marchandises" }
+}
