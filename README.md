@@ -307,6 +307,18 @@ source, multipliée par 0,85 pour chaque incohérence et 0,70 pour chaque erreur
 qualité moyenne de l'OCR si le document est scanné. Ce n'est pas une probabilité issue du
 modèle : c'est un indicateur de tri pour savoir quels documents regarder en premier.
 
+### Texte caché dans les PDF
+
+Avant toute extraction, chaque page est inspectée pour repérer le texte qu'un lecteur humain ne voit
+pas mais qu'un extracteur lit : mode de rendu invisible, corps inférieur à 1 point, texte transparent,
+texte placé hors de la page, texte de la couleur de son fond (blanc sur blanc). Ce texte est **retiré**
+de ce qui est transmis au modèle, et le document reçoit l'alerte bloquante `texte_cache`, qui survit aux
+corrections : seule une validation forcée, tracée dans l'audit, peut passer outre. La couche texte
+invisible d'un scan n'est pas crue sur parole : la page est relue par OCR.
+
+Limite : un texte masqué par une image posée par-dessus, ou écrit en très petit mais au-dessus de
+1 point, n'est pas détecté.
+
 ## Ajouter un type de document
 
 Déposez un fichier `backend/schemas/<code>.json` et redémarrez le backend : le schéma est

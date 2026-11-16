@@ -11,7 +11,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session, sessionmaker
 
 from .config import Settings
-from .ingestion import IngestionError, extract_text
+from .ingestion import HIDDEN_REASON_LABELS, HiddenText, IngestionError, extract_text
 from .llm_client import ExtractionError, OllamaClient
 from .models import STATUS_PENDING_REVIEW, STATUS_PROCESSING, ExtractionAuditLog, ProcessedDocument
 from .normalization import Warning, make_warning
@@ -19,6 +19,7 @@ from .schema_registry import definition_of
 from .validation import (
     CODE_DUPLICATE,
     CODE_EXTRACTION_FAILED,
+    CODE_HIDDEN_TEXT,
     CODE_UNREADABLE,
     count_blocking,
     evaluate_document,
@@ -27,7 +28,8 @@ from .validation import (
 logger = logging.getLogger(__name__)
 
 # Alertes qui ne dépendent pas des données saisies et survivent à une correction humaine.
-PERSISTENT_CODES = (CODE_DUPLICATE,)
+PERSISTENT_CODES = (CODE_DUPLICATE, CODE_HIDDEN_TEXT)
+HIDDEN_EXCERPT_CHARS = 160
 MIN_TEXT_CHARS = 30
 
 
@@ -54,6 +56,24 @@ def _duplicate_warning(session: Session, document: ProcessedDocument) -> Warning
         CODE_DUPLICATE, "warning", None,
         f"Fichier identique déjà importé le {twin.created_at:%d/%m/%Y} sous le nom « {twin.original_filename} »",
         actual=str(twin.id),
+    )
+
+
+def _hidden_text_warning(hidden: list[HiddenText]) -> Warning:
+    """Alerte bloquante : le PDF contenait du texte invisible pour un lecteur humain.
+
+    Ce texte a déjà été retiré de ce qui est transmis au modèle. L'alerte reste attachée au
+    document même après correction : seule une validation forcée, tracée, peut passer outre.
+    """
+    reasons = sorted({HIDDEN_REASON_LABELS[item.reason] for item in hidden})
+    pages = sorted({item.page for item in hidden})
+    excerpt = " … ".join(item.text for item in hidden)[:HIDDEN_EXCERPT_CHARS]
+    return make_warning(
+        CODE_HIDDEN_TEXT, "error", None,
+        f"Texte caché détecté page(s) {', '.join(map(str, pages))} ({' ; '.join(reasons)}). Il a été écarté de "
+        "l'analyse. Document à traiter comme une tentative de fraude possible : contrôlez les coordonnées "
+        "bancaires et les montants par un autre canal avant de valider.",
+        actual=excerpt,
     )
 
 
@@ -127,6 +147,17 @@ def _run(session: Session, document: ProcessedDocument, llm: OllamaClient, setti
         method=ingestion.method, pages=ingestion.page_count, characters=len(ingestion.text),
         ocr_confidence=ingestion.ocr_confidence, notes=ingestion.notes,
     )
+
+    if ingestion.hidden_text:
+        extra.append(_hidden_text_warning(ingestion.hidden_text))
+        add_audit(
+            session, document.id, "hidden_text_detected",
+            passages=[
+                {"page": item.page, "reason": item.reason, "excerpt": item.text[:HIDDEN_EXCERPT_CHARS]}
+                for item in ingestion.hidden_text[:20]
+            ],
+            total=len(ingestion.hidden_text),
+        )
 
     if len(ingestion.text.strip()) < MIN_TEXT_CHARS:
         reason = " ; ".join(ingestion.notes) or "aucun texte détecté, même après OCR"
