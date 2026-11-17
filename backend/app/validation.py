@@ -26,6 +26,7 @@ CODE_NOT_IN_SOURCE = "valeur_non_retrouvee"
 CODE_DUPLICATE = "doublon_possible"
 CODE_EXTRACTION_FAILED = "extraction_echouee"
 CODE_UNREADABLE = "texte_illisible"
+CODE_HIDDEN_TEXT = "texte_cache"
 
 BLOCKING_SEVERITIES = ("error", "warning")
 CENT = Decimal("0.01")
