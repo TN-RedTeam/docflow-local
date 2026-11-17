@@ -88,6 +88,8 @@ def client(settings: Settings, ollama: OllamaRecorder):
     with TestClient(app) as test_client:
         if settings.database_url.startswith("postgresql"):
             with app.state.engine.begin() as connection:
-                connection.execute(text("TRUNCATE extraction_audit_logs, processed_documents"))
+                connection.execute(text("TRUNCATE auth_sessions, users, extraction_audit_logs, processed_documents"))
+        resp = test_client.post("/api/connexion", json={"username": "admin", "password": "docflow"})
+        assert resp.status_code == 200, f"Auth setup failed: {resp.text}"
         yield test_client
     llm.close()

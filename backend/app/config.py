@@ -63,6 +63,10 @@ class Settings(BaseSettings):
     amount_tolerance: Decimal = Decimal("0.02")
     cors_origins: str = "http://localhost:5173,http://localhost:8080"
 
+    admin_user: str = "admin"
+    admin_pass: str = "docflow"
+    session_lifetime_hours: int = 24
+
     @field_validator("export_dir", mode="before")
     @classmethod
     def _empty_export_dir_is_none(cls, value: object) -> object:
