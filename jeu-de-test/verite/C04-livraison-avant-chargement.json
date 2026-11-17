@@ -1,0 +1,45 @@
+{
+  "schema": "transport_cmr",
+  "donnees": {
+    "numero_cmr": "CMR-26-004550",
+    "date_etablissement": "2026-11-14",
+    "lieu_etablissement": "Lyon",
+    "expediteur": {
+      "nom": "NÉGOCE MATÉRIAUX DÉMONSTRATION SARL",
+      "adresse": "3 avenue du Test",
+      "code_postal": "69003",
+      "ville": "Lyon",
+      "pays": "France"
+    },
+    "destinataire": {
+      "nom": "NÉGOCE FICTIF DU VIEUX-PORT",
+      "adresse": "7 boulevard du Test",
+      "code_postal": "13010",
+      "ville": "Marseille",
+      "pays": "France"
+    },
+    "transporteur": {
+      "nom": "TRANSPORTS FICTIFS DU LYONNAIS",
+      "siret": "99955566700032",
+      "immatriculation": "AB-123-CD"
+    },
+    "lieu_chargement": "Lyon",
+    "date_chargement": "2026-11-14",
+    "lieu_livraison": "Marseille",
+    "date_livraison": "2026-11-13",
+    "marchandises": [
+      {
+        "reference_colis": "PAL-2611-31",
+        "nature_marchandise": "Carrelage grès cérame",
+        "nombre_colis": 2,
+        "type_emballage": "Palette",
+        "poids_brut_kg": 940.0,
+        "poids_net_kg": 900.0
+      }
+    ],
+    "nombre_colis_total": 2,
+    "poids_brut_total_kg": 940.0,
+    "poids_net_total_kg": 900.0,
+    "reserves": null
+  }
+}

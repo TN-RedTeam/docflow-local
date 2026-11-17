@@ -1,0 +1,53 @@
+{
+  "schema": "facture_fournisseur",
+  "donnees": {
+    "numero_facture": "FQR-2026-1104",
+    "date_facture": "2026-11-04",
+    "date_echeance": "2026-12-31",
+    "numero_commande": "CMD-26-0871",
+    "emetteur": {
+      "nom": "QUINCAILLERIE FICTIVE DU RHÔNE SAS",
+      "siret": "99911122200017",
+      "tva_intracom": "FR19999111222",
+      "adresse": "18 rue de l'Essai",
+      "code_postal": "69200",
+      "ville": "Vénissieux"
+    },
+    "client": {
+      "nom": "NÉGOCE MATÉRIAUX DÉMONSTRATION SARL",
+      "adresse": "3 avenue du Test, 69003 Lyon"
+    },
+    "lignes": [
+      {
+        "reference": "VIS-450",
+        "designation": "Vis à bois tête fraisée 4x50 (boîte de 500)",
+        "quantite": 12,
+        "prix_unitaire_ht": 18.5,
+        "remise_pct": null,
+        "montant_ht": 222.0
+      },
+      {
+        "reference": "CHE-080",
+        "designation": "Chevilles nylon 8 mm (boîte de 100)",
+        "quantite": 20,
+        "prix_unitaire_ht": 6.9,
+        "remise_pct": null,
+        "montant_ht": 138.0
+      },
+      {
+        "reference": "CAD-310",
+        "designation": "Cadenas laiton 40 mm",
+        "quantite": 8,
+        "prix_unitaire_ht": 14.75,
+        "remise_pct": 10,
+        "montant_ht": 106.2
+      }
+    ],
+    "total_ht": 466.2,
+    "taux_tva": 20,
+    "montant_tva": 93.24,
+    "total_ttc": 559.44,
+    "iban": "FR2810096000501234567890118",
+    "conditions_paiement": "30 jours fin de mois par virement"
+  }
+}

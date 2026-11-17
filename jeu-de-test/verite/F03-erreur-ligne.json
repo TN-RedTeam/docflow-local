@@ -1,0 +1,45 @@
+{
+  "schema": "facture_fournisseur",
+  "donnees": {
+    "numero_facture": "SFV-26-0388",
+    "date_facture": "2026-11-08",
+    "date_echeance": "2026-12-08",
+    "numero_commande": null,
+    "emetteur": {
+      "nom": "SCIERIE FICTIVE DU VERCORS SARL",
+      "siret": "99933344600022",
+      "tva_intracom": "FR10999333446",
+      "adresse": "Route du Col",
+      "code_postal": "38250",
+      "ville": "Villard-de-Lans"
+    },
+    "client": {
+      "nom": "NÉGOCE MATÉRIAUX DÉMONSTRATION SARL",
+      "adresse": "3 avenue du Test, 69003 Lyon"
+    },
+    "lignes": [
+      {
+        "reference": "CTP-18",
+        "designation": "Contreplaqué 18 mm 250x122",
+        "quantite": 30,
+        "prix_unitaire_ht": 42.0,
+        "remise_pct": null,
+        "montant_ht": 1360.0
+      },
+      {
+        "reference": "LAM-27",
+        "designation": "Lames de terrasse pin 27 mm (m²)",
+        "quantite": 45,
+        "prix_unitaire_ht": 28.9,
+        "remise_pct": null,
+        "montant_ht": 1300.5
+      }
+    ],
+    "total_ht": 2660.5,
+    "taux_tva": 20,
+    "montant_tva": 532.1,
+    "total_ttc": 3192.6,
+    "iban": "FR0830004008190001234567842",
+    "conditions_paiement": "30 jours net par virement"
+  }
+}

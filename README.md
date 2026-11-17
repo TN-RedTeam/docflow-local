@@ -186,6 +186,12 @@ Arrêt (les données PostgreSQL sont conservées dans le volume `pgdata`) :
 docker compose down
 ```
 
+## Jeu de test
+
+Le dossier [`jeu-de-test/`](jeu-de-test/) contient 10 factures fournisseurs et 8 lettres de voiture CMR
+fictives (PDF natifs, scannés, à texte caché, en double), le corrigé des alertes attendues pour chacune,
+et un faux modèle pour essayer DocFlow sans carte graphique. Voir son [README](jeu-de-test/README.md).
+
 ## Tests
 
 ```bash
