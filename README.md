@@ -26,6 +26,36 @@ PDF natif ou scanné
 └──────────────┘          └───────────────────┘         └────────────────────────┘
 ```
 
+## À quoi sert ce dépôt, et quand l'utiliser
+
+**À quoi il sert.** DocFlow Local transforme des PDF (factures fournisseurs, lettres de voiture CMR) en
+données vérifiées et exportables, avec un modèle d'IA qui tourne sur la machine du client.
+
+**Utilisez-le quand :**
+
+- une équipe ressaisit chaque jour des factures ou des documents de transport dans un logiciel ;
+- les documents sont confidentiels et ne doivent pas partir vers un service en ligne ;
+- vous voulez qu'un humain valide chaque fiche, avec les erreurs de calcul signalées ;
+- vous craignez la fraude au faux RIB : le texte caché d'un PDF est détecté et écarté.
+
+**Ne l'utilisez pas quand :**
+
+- le besoin est une liaison directe avec un ERP : DocFlow exporte des fichiers, il ne s'y connecte pas ;
+- il faut des comptes utilisateurs nominatifs : l'application n'a pas d'authentification, elle se place
+  derrière le reverse-proxy de la box (`LLM-exploits/codesafe-ai-box`) ;
+- le client n'a ni serveur ni PC capable de faire tourner un modèle local.
+
+**Comment le lancer.** Seul, pour un essai : voir « Démarrage avec Docker ». Chez un client : par la box
+CodeSafe, qui ajoute le mot de passe, le cloisonnement réseau et le filtre de sécurité.
+
+### Les trois dépôts CodeSafe
+
+| Dépôt | À quoi il sert | À utiliser quand |
+|---|---|---|
+| [`docflow-local`](https://github.com/TN-RedTeam/docflow-local) | Lire des factures et des documents de transport en PDF, contrôler les calculs, faire valider par un humain, exporter | une PME ressaisit des documents à la main et ne veut rien envoyer en ligne |
+| [`TenderPulse`](https://github.com/TN-RedTeam/TenderPulse) | Collecter chaque jour les appels d'offres publics et les noter selon le profil d'une PME | une PME répond à des marchés publics et fait sa veille à la main |
+| [`LLM-exploits`](https://github.com/TN-RedTeam/LLM-exploits) | Sécuriser, auditer et vendre : la box qui réunit les applications, l'outil d'audit, l'offre commerciale, et FreightGuard | vous installez chez un client, vous prouvez la sécurité, ou vous préparez un rendez-vous commercial |
+
 ## Sommaire
 
 1. [Architecture](#architecture)
