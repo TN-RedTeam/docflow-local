@@ -18,6 +18,7 @@ from .database import build_engine, build_session_factory, init_database
 from .llm_client import OllamaClient
 from .models import STATUS_PROCESSING, ProcessedDocument
 from .pipeline import process_document
+from .auth import AuthMiddleware, ensure_admin, router as auth_router
 from .routers import documents, meta
 from .schema_registry import sync_schemas
 
@@ -62,6 +63,8 @@ def create_app(settings: Settings | None = None, llm_client: OllamaClient | None
         if pending:
             logger.info("%d document(s) remis en file de traitement", len(pending))
 
+        ensure_admin(session_factory, settings.admin_user, settings.admin_pass)
+
         yield
 
         executor.shutdown(wait=True, cancel_futures=True)
@@ -75,9 +78,11 @@ def create_app(settings: Settings | None = None, llm_client: OllamaClient | None
         description="Extraction, vérification et structuration de documents opérationnels, 100 % en local.",
         lifespan=lifespan,
     )
+    app.add_middleware(AuthMiddleware)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.cors_origin_list,
+        allow_credentials=True,
         allow_methods=["GET", "POST", "PATCH", "DELETE"],
         allow_headers=["*"],
         expose_headers=["Content-Disposition", "X-Document-Count"],
@@ -92,6 +97,7 @@ def create_app(settings: Settings | None = None, llm_client: OllamaClient | None
             headers={"Retry-After": "5"},
         )
 
+    app.include_router(auth_router)
     app.include_router(meta.router)
     app.include_router(documents.router)
     return app

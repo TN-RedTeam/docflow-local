@@ -48,9 +48,13 @@ async function toApiError(response: Response): Promise<ApiError> {
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   let response: Response;
   try {
-    response = await fetch(`${API_BASE}${path}`, init);
+    response = await fetch(`${API_BASE}${path}`, { credentials: "include", ...init });
   } catch {
     throw new ApiError(0, "Le serveur DocFlow est injoignable. Vérifiez que le backend est démarré.");
+  }
+  if (response.status === 401) {
+    window.dispatchEvent(new CustomEvent("docflow:unauthorized"));
+    throw new ApiError(401, "Session expirée");
   }
   if (!response.ok) {
     throw await toApiError(response);
@@ -59,6 +63,26 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     return undefined as T;
   }
   return (await response.json()) as T;
+}
+
+export interface AuthUser {
+  id: number;
+  username: string;
+  is_admin: boolean;
+}
+
+export async function login(username: string, password: string): Promise<AuthUser> {
+  const res = await request<{ user: AuthUser }>("/connexion", jsonInit("POST", { username, password }));
+  return res.user;
+}
+
+export async function logout(): Promise<void> {
+  await request<unknown>("/deconnexion", { method: "POST" });
+}
+
+export async function fetchMe(): Promise<AuthUser> {
+  const res = await request<{ user: AuthUser }>("/moi");
+  return res.user;
 }
 
 function jsonInit(method: string, body: unknown): RequestInit {
@@ -154,7 +178,7 @@ export async function downloadExport(options: ExportOptions): Promise<number> {
   if (options.ids?.length) params.set("ids", options.ids.join(","));
   let response: Response;
   try {
-    response = await fetch(`${API_BASE}/documents/export?${params.toString()}`);
+    response = await fetch(`${API_BASE}/documents/export?${params.toString()}`, { credentials: "include" });
   } catch {
     throw new ApiError(0, "Le serveur DocFlow est injoignable.");
   }

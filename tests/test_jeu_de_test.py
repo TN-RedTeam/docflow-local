@@ -49,6 +49,7 @@ def client_jeu(settings):
 
     llm = OllamaClient(settings.ollama_base_url, settings.ollama_model, transport=httpx.MockTransport(serveur), max_retries=0)
     with TestClient(create_app(settings, llm_client=llm)) as client:
+        client.post("/api/connexion", json={"username": "admin", "password": "docflow"})
         yield client
     llm.close()
 

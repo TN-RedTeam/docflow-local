@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
-import { ApiError, fetchHealth, fetchSchemas } from "./api";
+import { type AuthUser, ApiError, fetchHealth, fetchMe, fetchSchemas, logout } from "./api";
 import { Banner } from "./components/ui";
 import { navigateToDashboard, useHashRoute, useStoredState } from "./lib/hooks";
 import Dashboard from "./pages/Dashboard";
+import Login from "./pages/Login";
 import Review from "./pages/Review";
 import type { ExportFormat, Health, SchemaOut } from "./types";
 
@@ -40,6 +41,8 @@ function HealthIndicator({ health, unreachable }: { health: Health | null; unrea
 
 export default function App() {
   const route = useHashRoute();
+  const [user, setUser] = useState<AuthUser | null>(null);
+  const [authChecked, setAuthChecked] = useState(false);
   const [schemas, setSchemas] = useState<SchemaOut[]>([]);
   const [schemaError, setSchemaError] = useState<string | null>(null);
   const [health, setHealth] = useState<Health | null>(null);
@@ -47,16 +50,36 @@ export default function App() {
   const [operator, setOperator] = useStoredState("docflow.operateur", "");
   const [exportFormat, setExportFormat] = useStoredState("docflow.format_export", "csv");
 
+  const handleLogout = useCallback(async () => {
+    try { await logout(); } catch { /* ignore */ }
+    setUser(null);
+  }, []);
+
   useEffect(() => {
+    fetchMe()
+      .then((u) => setUser(u))
+      .catch(() => setUser(null))
+      .finally(() => setAuthChecked(true));
+  }, []);
+
+  useEffect(() => {
+    const handler = () => setUser(null);
+    window.addEventListener("docflow:unauthorized", handler);
+    return () => window.removeEventListener("docflow:unauthorized", handler);
+  }, []);
+
+  useEffect(() => {
+    if (!user) return;
     fetchSchemas()
       .then((list) => {
         setSchemas(list);
         setSchemaError(null);
       })
       .catch((cause) => setSchemaError(cause instanceof ApiError ? cause.message : "Chargement des schémas impossible"));
-  }, []);
+  }, [user]);
 
   useEffect(() => {
+    if (!user) return;
     const check = () =>
       fetchHealth()
         .then((result) => {
@@ -67,7 +90,15 @@ export default function App() {
     check();
     const timer = setInterval(check, HEALTH_INTERVAL_MS);
     return () => clearInterval(timer);
-  }, []);
+  }, [user]);
+
+  if (!authChecked) {
+    return <div className="flex min-h-screen items-center justify-center text-slate-500">Chargement…</div>;
+  }
+
+  if (!user) {
+    return <Login onLogin={setUser} />;
+  }
 
   return (
     <div className="flex h-full flex-col">
@@ -91,6 +122,14 @@ export default function App() {
               onChange={(event) => setOperator(event.target.value)}
             />
           </label>
+          <span className="text-xs text-slate-400">{user.username}</span>
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="rounded border border-slate-600 px-2 py-1 text-xs text-slate-300 hover:bg-slate-700"
+          >
+            Déconnexion
+          </button>
         </div>
       </header>
 
