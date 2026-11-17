@@ -1,0 +1,53 @@
+{
+  "schema": "transport_cmr",
+  "donnees": {
+    "numero_cmr": "CMR-26-004580",
+    "date_etablissement": "2026-11-19",
+    "lieu_etablissement": "Lyon",
+    "expediteur": {
+      "nom": "NÉGOCE MATÉRIAUX DÉMONSTRATION SARL",
+      "adresse": "3 avenue du Test",
+      "code_postal": "69003",
+      "ville": "Lyon",
+      "pays": "France"
+    },
+    "destinataire": {
+      "nom": "EDILIZIA FITTIZIA SRL",
+      "adresse": "Via della Prova 12",
+      "code_postal": "10121",
+      "ville": "Torino",
+      "pays": "Italie"
+    },
+    "transporteur": {
+      "nom": "TRANSPORTS FICTIFS DU LYONNAIS",
+      "siret": "99955566700032",
+      "immatriculation": "AB-123-CD"
+    },
+    "lieu_chargement": "Lyon",
+    "date_chargement": "2026-11-19",
+    "lieu_livraison": "Torino",
+    "date_livraison": "2026-11-21",
+    "marchandises": [
+      {
+        "reference_colis": "PAL-2611-51",
+        "nature_marchandise": "Robinetterie sanitaire",
+        "nombre_colis": 1,
+        "type_emballage": "Palette",
+        "poids_brut_kg": 210.0,
+        "poids_net_kg": 190.0
+      },
+      {
+        "reference_colis": "PAL-2611-52",
+        "nature_marchandise": "Vasques céramique",
+        "nombre_colis": 1,
+        "type_emballage": "Palette",
+        "poids_brut_kg": 330.0,
+        "poids_net_kg": 300.0
+      }
+    ],
+    "nombre_colis_total": 2,
+    "poids_brut_total_kg": 540.0,
+    "poids_net_total_kg": 490.0,
+    "reserves": "Palette PAL-2611-52 filmage déchiré, deux vasques cassées."
+  }
+}

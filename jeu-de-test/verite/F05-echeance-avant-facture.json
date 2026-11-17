@@ -1,0 +1,37 @@
+{
+  "schema": "facture_fournisseur",
+  "donnees": {
+    "numero_facture": "SFV-26-0402",
+    "date_facture": "2026-11-20",
+    "date_echeance": "2026-10-20",
+    "numero_commande": null,
+    "emetteur": {
+      "nom": "SCIERIE FICTIVE DU VERCORS SARL",
+      "siret": "99933344600022",
+      "tva_intracom": "FR10999333446",
+      "adresse": "Route du Col",
+      "code_postal": "38250",
+      "ville": "Villard-de-Lans"
+    },
+    "client": {
+      "nom": "NÉGOCE MATÉRIAUX DÉMONSTRATION SARL",
+      "adresse": "3 avenue du Test, 69003 Lyon"
+    },
+    "lignes": [
+      {
+        "reference": "TAS-50",
+        "designation": "Tasseaux sapin 50x50 (botte de 10)",
+        "quantite": 15,
+        "prix_unitaire_ht": 24.0,
+        "remise_pct": null,
+        "montant_ht": 360.0
+      }
+    ],
+    "total_ht": 360.0,
+    "taux_tva": 20,
+    "montant_tva": 72.0,
+    "total_ttc": 432.0,
+    "iban": "FR0830004008190001234567842",
+    "conditions_paiement": "30 jours net par virement"
+  }
+}

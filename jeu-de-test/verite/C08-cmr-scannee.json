@@ -1,0 +1,61 @@
+{
+  "schema": "transport_cmr",
+  "donnees": {
+    "numero_cmr": "CMR-26-004512",
+    "date_etablissement": "2026-11-05",
+    "lieu_etablissement": "Lyon",
+    "expediteur": {
+      "nom": "NÉGOCE MATÉRIAUX DÉMONSTRATION SARL",
+      "adresse": "3 avenue du Test",
+      "code_postal": "69003",
+      "ville": "Lyon",
+      "pays": "France"
+    },
+    "destinataire": {
+      "nom": "CHANTIER FICTIF BELLEDONNE",
+      "adresse": "2 quai de l'Isère",
+      "code_postal": "38000",
+      "ville": "Grenoble",
+      "pays": "France"
+    },
+    "transporteur": {
+      "nom": "TRANSPORTS FICTIFS DU LYONNAIS",
+      "siret": "99955566700032",
+      "immatriculation": "AB-123-CD"
+    },
+    "lieu_chargement": "Lyon",
+    "date_chargement": "2026-11-05",
+    "lieu_livraison": "Grenoble",
+    "date_livraison": "2026-11-06",
+    "marchandises": [
+      {
+        "reference_colis": "PAL-2611-01",
+        "nature_marchandise": "Plaques de plâtre BA13",
+        "nombre_colis": 2,
+        "type_emballage": "Palette",
+        "poids_brut_kg": 620.0,
+        "poids_net_kg": 600.0
+      },
+      {
+        "reference_colis": "PAL-2611-02",
+        "nature_marchandise": "Rails et montants métalliques",
+        "nombre_colis": 1,
+        "type_emballage": "Palette",
+        "poids_brut_kg": 180.0,
+        "poids_net_kg": 170.0
+      },
+      {
+        "reference_colis": "COL-2611-03",
+        "nature_marchandise": "Visserie",
+        "nombre_colis": 4,
+        "type_emballage": "Carton",
+        "poids_brut_kg": 32.0,
+        "poids_net_kg": 28.0
+      }
+    ],
+    "nombre_colis_total": 7,
+    "poids_brut_total_kg": 832.0,
+    "poids_net_total_kg": 798.0,
+    "reserves": null
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "schema": "transport_cmr",
+  "donnees": {
+    "numero_cmr": "CMR-26-004591",
+    "date_etablissement": "2026-11-24",
+    "lieu_etablissement": "Lyon",
+    "expediteur": {
+      "nom": "NÉGOCE MATÉRIAUX DÉMONSTRATION SARL",
+      "adresse": "3 avenue du Test",
+      "code_postal": "69003",
+      "ville": "Lyon",
+      "pays": "France"
+    },
+    "destinataire": {
+      "nom": "CHANTIER FICTIF BELLEDONNE",
+      "adresse": "2 quai de l'Isère",
+      "code_postal": "38000",
+      "ville": "Grenoble",
+      "pays": "France"
+    },
+    "transporteur": {
+      "nom": "TRANSPORTS FICTIFS DU LYONNAIS",
+      "siret": "99955566700035",
+      "immatriculation": "AB-123-CD"
+    },
+    "lieu_chargement": "Lyon",
+    "date_chargement": "2026-11-24",
+    "lieu_livraison": "Grenoble",
+    "date_livraison": "2026-11-25",
+    "marchandises": [
+      {
+        "reference_colis": "PAL-2611-61",
+        "nature_marchandise": "Parpaings 20x20x50",
+        "nombre_colis": 4,
+        "type_emballage": "Palette",
+        "poids_brut_kg": 3200.0,
+        "poids_net_kg": 3200.0
+      }
+    ],
+    "nombre_colis_total": 4,
+    "poids_brut_total_kg": 3200.0,
+    "poids_net_total_kg": 3200.0,
+    "reserves": null
+  }
+}

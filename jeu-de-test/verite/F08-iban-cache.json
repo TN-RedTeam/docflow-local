@@ -1,0 +1,37 @@
+{
+  "schema": "facture_fournisseur",
+  "donnees": {
+    "numero_facture": "FQR-2026-1130",
+    "date_facture": "2026-11-30",
+    "date_echeance": "2026-12-31",
+    "numero_commande": null,
+    "emetteur": {
+      "nom": "QUINCAILLERIE FICTIVE DU RHÔNE SAS",
+      "siret": "99911122200017",
+      "tva_intracom": "FR19999111222",
+      "adresse": "18 rue de l'Essai",
+      "code_postal": "69200",
+      "ville": "Vénissieux"
+    },
+    "client": {
+      "nom": "NÉGOCE MATÉRIAUX DÉMONSTRATION SARL",
+      "adresse": "3 avenue du Test, 69003 Lyon"
+    },
+    "lignes": [
+      {
+        "reference": "DIS-125",
+        "designation": "Disques à tronçonner 125 mm (boîte de 25)",
+        "quantite": 10,
+        "prix_unitaire_ht": 37.0,
+        "remise_pct": null,
+        "montant_ht": 370.0
+      }
+    ],
+    "total_ht": 370.0,
+    "taux_tva": 20,
+    "montant_tva": 74.0,
+    "total_ttc": 444.0,
+    "iban": "FR2810096000501234567890118",
+    "conditions_paiement": "30 jours fin de mois par virement"
+  }
+}

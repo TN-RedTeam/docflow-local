@@ -1,0 +1,45 @@
+{
+  "schema": "facture_fournisseur",
+  "donnees": {
+    "numero_facture": "FQR-2026-1117",
+    "date_facture": "2026-11-17",
+    "date_echeance": "2026-12-31",
+    "numero_commande": "CMD-26-0902",
+    "emetteur": {
+      "nom": "QUINCAILLERIE FICTIVE DU RHÔNE SAS",
+      "siret": "99911122200017",
+      "tva_intracom": "FR19999111222",
+      "adresse": "18 rue de l'Essai",
+      "code_postal": "69200",
+      "ville": "Vénissieux"
+    },
+    "client": {
+      "nom": "NÉGOCE MATÉRIAUX DÉMONSTRATION SARL",
+      "adresse": "3 avenue du Test, 69003 Lyon"
+    },
+    "lignes": [
+      {
+        "reference": "PER-010",
+        "designation": "Perceuse visseuse 18 V",
+        "quantite": 5,
+        "prix_unitaire_ht": 129.0,
+        "remise_pct": null,
+        "montant_ht": 645.0
+      },
+      {
+        "reference": "BAT-020",
+        "designation": "Batterie 18 V 4 Ah",
+        "quantite": 10,
+        "prix_unitaire_ht": 49.5,
+        "remise_pct": null,
+        "montant_ht": 495.0
+      }
+    ],
+    "total_ht": 1140.0,
+    "taux_tva": 20,
+    "montant_tva": 238.0,
+    "total_ttc": 1378.0,
+    "iban": "FR2810096000501234567890118",
+    "conditions_paiement": "30 jours fin de mois par virement"
+  }
+}

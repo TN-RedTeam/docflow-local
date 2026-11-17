@@ -1,0 +1,53 @@
+{
+  "schema": "transport_cmr",
+  "donnees": {
+    "numero_cmr": "CMR-26-004541",
+    "date_etablissement": "2026-11-12",
+    "lieu_etablissement": "Lyon",
+    "expediteur": {
+      "nom": "NÉGOCE MATÉRIAUX DÉMONSTRATION SARL",
+      "adresse": "3 avenue du Test",
+      "code_postal": "69003",
+      "ville": "Lyon",
+      "pays": "France"
+    },
+    "destinataire": {
+      "nom": "CHANTIER FICTIF BELLEDONNE",
+      "adresse": "2 quai de l'Isère",
+      "code_postal": "38000",
+      "ville": "Grenoble",
+      "pays": "France"
+    },
+    "transporteur": {
+      "nom": "TRANSPORTS FICTIFS DU LYONNAIS",
+      "siret": "99955566700032",
+      "immatriculation": "AB-123-CD"
+    },
+    "lieu_chargement": "Lyon",
+    "date_chargement": "2026-11-12",
+    "lieu_livraison": "Grenoble",
+    "date_livraison": "2026-11-13",
+    "marchandises": [
+      {
+        "reference_colis": "PAL-2611-21",
+        "nature_marchandise": "Laine de verre en rouleaux",
+        "nombre_colis": 2,
+        "type_emballage": "Palette",
+        "poids_brut_kg": 140.0,
+        "poids_net_kg": 150.0
+      },
+      {
+        "reference_colis": "COL-2611-22",
+        "nature_marchandise": "Adhésif d'étanchéité",
+        "nombre_colis": 6,
+        "type_emballage": "Carton",
+        "poids_brut_kg": 24.0,
+        "poids_net_kg": 20.0
+      }
+    ],
+    "nombre_colis_total": 8,
+    "poids_brut_total_kg": 164.0,
+    "poids_net_total_kg": 170.0,
+    "reserves": null
+  }
+}
